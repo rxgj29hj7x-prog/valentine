@@ -1,0 +1,192 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Valentine for Rian</title>  
+<style>  
+  @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');  
+  
+  body {  
+    margin: 0;  
+    height: 100vh;  
+    background: #ffe6e6;  
+    overflow: hidden;  
+    font-family: 'Arial', sans-serif;  
+    display: flex;  
+    flex-direction: column;  
+    align-items: center;  
+    justify-content: center;  
+    text-align: center;  
+    color: #ff0066;  
+    position: relative;  
+    animation: bgPulse 5s ease-in-out infinite;  
+  }  
+  
+  @keyframes bgPulse {  
+    0%,100% { background: #ffe6e6; }  
+    50% { background: #ffccd5; }  
+  }  
+  
+  h1 {  
+    font-size: 2rem;  
+    margin: 0.5em 1em;  
+    font-family: 'Pacifico', cursive;  
+    line-height: 1.4;  
+  }  
+  
+  p {  
+    font-size: 1.2rem;  
+    color: #ff3399;  
+    margin: 0.5em 1em;  
+  }  
+  
+  .button-container {  
+    margin-top: 25px;  
+    display: flex;  
+    flex-direction: column;  
+    gap: 15px;  
+    align-items: center;  
+  }  
+  
+  button {  
+    font-size: 1.5rem;  
+    padding: 15px 40px;  
+    border: none;  
+    border-radius: 15px;  
+    cursor: pointer;  
+    color: white;  
+    width: 70%;  
+    max-width: 300px;  
+    transition: transform 0.2s;  
+    animation: pulse 1.5s infinite;  
+  }  
+  
+  button:active {  
+    transform: scale(0.95);  
+    animation: none;  
+  }  
+  
+  .yes { background-color: #ff3366; }  
+  .no { background-color: #999999; }  
+  
+  @keyframes pulse {  
+    0%,100% { transform: scale(1); }  
+    50% { transform: scale(1.08); }  
+  }  
+  
+  /* Falling emojis */  
+  .falling, .confetti, .floating-heart, .explosion {  
+    position: absolute;  
+    top: -50px;  
+    font-size: 24px;  
+    animation: fall linear forwards, fade linear forwards;  
+  }  
+  
+  .floating-heart { animation: float 2s ease-in-out infinite; }  
+  
+  @keyframes fall { to { transform: translateY(100vh); } }  
+  @keyframes fade { to { opacity: 0; } }  
+  @keyframes float {  
+    0%,100% { transform: translateY(0); }  
+    50% { transform: translateY(-10px); }  
+  }  
+  
+  @keyframes explode {  
+    0% { transform: scale(0); opacity: 1; }  
+    100% { transform: scale(2) rotate(360deg); opacity: 0; }  
+  }  
+  
+</style>  
+</head>  
+<body>  
+  
+<h1 id="message">Will you be my Valentine, <span id="name">Rian</span>? 💖</h1>  
+<p id="submessage">Click below to answer ❤️</p>  
+  
+<div class="button-container">  
+  <button class="yes" onclick="sendYes()">Yes ❤️</button>  
+  <button class="no" onclick="sendText('No 💔')">No 💔</button>  
+</div>  
+  
+<script>  
+const body = document.body;  
+const emojis = ['❤️','🌹','🌸','💌','💕'];  
+const colors = ['#ff3366','#ff6699','#ffccff','#ff99cc','#ff0066','#ff3399'];  
+  
+// Falling emojis  
+const createFallingEmoji = () => {  
+  const el = document.createElement('div');  
+  el.className = 'falling';  
+  el.style.left = Math.random() * window.innerWidth + 'px';  
+  el.style.fontSize = (18 + Math.random()*15)+'px';  
+  el.style.animationDuration = (3 + Math.random()*2)+'s';  
+  el.textContent = emojis[Math.floor(Math.random()*emojis.length)];  
+  body.appendChild(el);  
+  setTimeout(()=>el.remove(),5000);  
+};  
+setInterval(createFallingEmoji, 300);  
+  
+// Confetti  
+const createConfetti = () => {  
+  const confetti = document.createElement('div');  
+  confetti.className = 'confetti';  
+  confetti.style.left = Math.random()*window.innerWidth+'px';  
+  confetti.style.fontSize = (12 + Math.random()*10)+'px';  
+  confetti.style.color = colors[Math.floor(Math.random()*colors.length)];  
+  confetti.textContent = '✨';  
+  confetti.style.animationDuration = (2 + Math.random()*3)+'s';  
+  body.appendChild(confetti);  
+  setTimeout(()=>confetti.remove(),5000);  
+};  
+setInterval(createConfetti, 200);  
+  
+// Floating hearts on button hover/tap  
+const createFloatingHeart = (button) => {  
+  const heart = document.createElement('div');  
+  heart.className='floating-heart';  
+  const rect = button.getBoundingClientRect();  
+  heart.style.left = rect.left + rect.width/2 + (Math.random()*30-15) + 'px';  
+  heart.style.top = rect.top - 20 + 'px';  
+  heart.style.fontSize = (15 + Math.random()*15)+'px';  
+  heart.textContent='❤️';  
+  body.appendChild(heart);  
+  setTimeout(()=>heart.remove(),2000);  
+};  
+document.querySelectorAll('button').forEach(btn=>{  
+  btn.addEventListener('mouseover',()=>createFloatingHeart(btn));  
+  btn.addEventListener('touchstart',()=>createFloatingHeart(btn));  
+});  
+  
+// Text sending function  
+function sendText(answer){  
+  const phoneNumber = "+1YOURNUMBER"; // <-- replace with your number  
+  const message = encodeURIComponent(`Hi Adonay, I clicked "${answer}"`);  
+  window.location.href = `sms:${phoneNumber}?body=${message}`;  
+}  
+  
+// Yes button with heart explosion  
+function sendYes(){  
+  const btn = document.querySelector('.yes');  
+  const rect = btn.getBoundingClientRect();  
+  
+  // Create explosion  
+  for(let i=0;i<12;i++){  
+    const h = document.createElement('div');  
+    h.className='explosion';  
+    h.style.left = rect.left + rect.width/2 + 'px';  
+    h.style.top = rect.top + rect.height/2 + 'px';  
+    h.style.color = colors[Math.floor(Math.random()*colors.length)];  
+    h.style.fontSize = (15 + Math.random()*15)+'px';  
+    h.textContent = '❤️';  
+    h.style.transform = `rotate(${Math.random()*360}deg)`;  
+    body.appendChild(h);  
+    setTimeout(()=>h.remove(),500);  
+  }  
+  
+  sendText('Yes ❤️');  
+}  
+</script>  
+  
+</body>  
+</html>  
